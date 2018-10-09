@@ -16,38 +16,13 @@ npm install --save vue-stored-prop-decorator
 ## Exemple:
 
 ```typescript
-	@Component({
-		components: {
-			Notify,
-			Window,
-			AppLoader,
-		}
-	})
-	export default class Screen extends VueComponent {
-		
-		@Stored(storeUser)
-		public me: User;
-	}
-
-```
-
-### parent component
-
-```html
-<template>
-	<div>
-		<p>Value: {{ value }}</p>
-		<my-child :value1.sync="value" ></my-child>
-	</div>
-</template>
-
-<script lang="ts">
 	import {Component, Vue} from 'vue-property-decorator';
 	import {User} from './models/user';
 	import userStore from './stores/user';
 	
 	@Component
 	export default class MyComponent extends Vue {
+		
 		
 		@Stored(userStore)
 		me: User;
@@ -70,7 +45,6 @@ npm install --save vue-stored-prop-decorator
 		// set customPropName(value: User) {
 		// 	userStore.commit('setMe', value);	
 		// }
-			
 	}
-</script>
+
 ```
