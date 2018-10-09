@@ -1,0 +1,45 @@
+{
+  "name": "vue-stored-decorator",
+  "version": "1.0.0",
+  "description": "Add @Stored property annotation for vuex in Typscript mode. Replace property by setter and getter on store.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GollumJS/vue-stored-prop-decorator.git"
+  },
+  "keywords": [
+    "vuex",
+    "store",
+    "prop",
+    "property",
+    "decorator",
+    "typescript",
+    "vuejs",
+    "vue"
+  ],
+  "author": "Damien Duboeuf <smeagolworms4@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GollumJS/vue-stored-prop-decorator/issues"
+  },
+  "homepage": "https://github.com/GollumJS/vue-stored-prop-decorator#readme",
+  "dependencies": {
+    "vue": "^2.5",
+    "vuex": "^3"
+  },
+  "devDependencies": {
+    "typescript": "^2.8.3"
+  },
+  "files": [
+    "index.ts",
+    "index.js",
+    "index.js.map",
+    "LICENSE",
+    "package.json",
+    "README.md",
+    "tsconfig.json"
+  ]
+}
