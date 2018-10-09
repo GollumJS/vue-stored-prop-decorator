@@ -17,6 +17,7 @@ npm install --save vue-stored-prop-decorator
 
 ```typescript
 	import {Component, Vue} from 'vue-property-decorator';
+	import {Stored} from 'vue-stored-prop-decorator';
 	import {User} from './models/user';
 	import userStore from './stores/user';
 	
