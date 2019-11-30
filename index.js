@@ -10,11 +10,11 @@ exports.Stored = function (store, propertyName) {
         }
         Object.defineProperty(target, propertyKey, {
             get: function () {
-                return store.state[propertyName];
+                return store().state[propertyName];
             },
             set: function (value) {
                 var name = 'set' + propertyName.replace(/\b\w/g, function (l) { return l.toUpperCase(); });
-                store.commit(name, value);
+                store().commit(name, value);
             }
         });
     };

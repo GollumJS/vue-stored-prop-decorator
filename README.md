@@ -25,7 +25,7 @@ npm install --save vue-stored-prop-decorator
 	export default class MyComponent extends Vue {
 		
 		
-		@Stored(userStore)
+		@Stored(() => userStore)
 		me: User;
 		
 		// Property `me` become after decorator : 
@@ -36,7 +36,7 @@ npm install --save vue-stored-prop-decorator
 		// 	userStore.commit('setMe', value);	
 		// }
 		
-		@Stored(userStore, 'me')
+		@Stored(() => userStore, 'me')
 		customPropName: User;
 		
 		// Property `customPropName` become after decorator : 
