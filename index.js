@@ -10,10 +10,16 @@ exports.Stored = function (store, propertyName) {
         }
         Object.defineProperty(target, propertyKey, {
             get: function () {
+                if (typeof store === 'string') {
+                    this.$store.state[store][propertyName];
+                }
                 return store().state[propertyName];
             },
             set: function (value) {
                 var name = 'set' + propertyName.replace(/\b\w/g, function (l) { return l.toUpperCase(); });
+                if (typeof store === 'string') {
+                    this.$store.commit(store + '/' + name, value);
+                }
                 store().commit(name, value);
             }
         });
