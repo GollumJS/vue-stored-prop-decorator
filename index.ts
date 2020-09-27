@@ -10,7 +10,7 @@ export const Stored = function (store: (() => Store<any>)|string, propertyName: 
 		Object.defineProperty(target, propertyKey, {
 			get: function () {
 				if (typeof store === 'string') {
-					this.$store.state[(<string>store)][propertyName];
+					return this.$store.state[(<string>store)][propertyName];
 				}
 				return (<() => Store<any>> store)().state[propertyName];
 			},
@@ -19,6 +19,7 @@ export const Stored = function (store: (() => Store<any>)|string, propertyName: 
 				
 				if (typeof store === 'string') {
 					this.$store.commit((<string>store) + '/' + name, value);
+					return;
 				}
 				(<() => Store<any>> store)().commit(name, value);
 			}
