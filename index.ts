@@ -1,6 +1,6 @@
 import {Store} from 'vuex';
 
-export const Stored = function (store: () => Store<any>|string, propertyName: string = null) {
+export const Stored = function (store: (() => Store<any>)|string, propertyName: string = null) {
 	return function(target: any, propertyKey: string = null, descriptor: PropertyDescriptor = null) {
 		
 		if (!propertyName) {
