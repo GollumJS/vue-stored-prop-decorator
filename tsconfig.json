@@ -7,9 +7,9 @@
 		"sourceMap": true,
 		"experimentalDecorators": true,
 		"lib": [
-			"es5",
-			"ScriptHost",
-			"DOM",
+			"es6",
+			"scripthost",
+			"dom",
 		]
 	},
 	"files": [
