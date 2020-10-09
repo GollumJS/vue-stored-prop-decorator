@@ -28,7 +28,7 @@ npm install --save vue-stored-prop-decorator
 		@Stored(() => userStore)
 		me: User;
 		
-		// Property `me` become after decorator : 
+		// Property `me` become after decoration : 
 		// get me(): User {
 		// 	return userStore.state.me;	
 		// }
@@ -39,13 +39,36 @@ npm install --save vue-stored-prop-decorator
 		@Stored(() => userStore, 'me')
 		customPropName: User;
 		
-		// Property `customPropName` become after decorator : 
+		// Property `customPropName` become after decoration : 
 		// get customPropName(): User {
 		// 	return userStore.state.me;	
 		// }
 		// set customPropName(value: User) {
 		// 	userStore.commit('setMe', value);	
 		// }
+		
+		@Stored('user', 'me')
+		meString: User;
+		
+		// Property `meString` become after decoration : 
+		// get me(): User {
+		// 	return this.$store.state.user.me;	
+		// }
+		// set me(value: User) {
+		// 	userStore.commit('user/setMe', value);	
+		// }
+		
+		public editUser() {
+			
+			// If User object has clone method 
+			// and if you edit property of user
+			 
+			this.meString.firstname = 'ChangeValue';
+			
+			// So real execute is:
+			// copy.firstname = 'ChangeValue';
+			// this.$store.commit('user/setMe', copy);
+		}
 	}
 
 ```
