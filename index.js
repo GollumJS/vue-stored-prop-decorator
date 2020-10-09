@@ -25,7 +25,10 @@ exports.Stored = function (store, propertyName) {
                         if (obj instanceof Object) {
                             return new Proxy(obj, {
                                 get: function (obj, prop) {
-                                    return createProxy_1(obj[prop]);
+                                    if (obj[prop] && typeof obj[prop] === 'object') {
+                                        return createProxy_1(obj[prop]);
+                                    }
+                                    return obj[prop];
                                 },
                                 set: function (obj, prop, value) {
                                     obj[prop] = value;

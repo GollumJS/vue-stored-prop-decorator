@@ -25,7 +25,10 @@ export const Stored = function (store: (() => Store<any>)|string, propertyName: 
                         if (obj instanceof Object) {
                             return new Proxy(obj, {
                                 get: (obj: any, prop: any) => {
-                                    return createProxy(obj[prop]);
+                                    if (obj[prop] && typeof obj[prop] === 'object') {
+                                        return createProxy(obj[prop]);
+                                    }
+                                    return obj[prop];
                                 },
                                 set: (obj: any, prop: any, value: any): boolean => {
                                     obj[prop] = value;
