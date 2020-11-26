@@ -9,6 +9,7 @@ exports.Stored = function (store, propertyName) {
             propertyName = propertyKey;
         }
         var name = 'set' + propertyName.replace(/\b\w/g, function (l) { return l.toUpperCase(); });
+        var recurcive = false;
         Object.defineProperty(target, propertyKey, {
             get: function () {
                 var _this = this;
@@ -31,12 +32,17 @@ exports.Stored = function (store, propertyName) {
                                     return obj[prop];
                                 },
                                 set: function (obj, prop, value) {
+                                    var diff = obj[prop] !== value;
                                     obj[prop] = value;
-                                    if (typeof store === 'string') {
-                                        _this.$store.commit(store + '/' + name, copy_1);
-                                    }
-                                    else {
-                                        store().commit(name, copy_1);
+                                    if (!recurcive && diff) {
+                                        recurcive = true;
+                                        if (typeof store === 'string') {
+                                            _this.$store.commit(store + '/' + name, copy_1);
+                                        }
+                                        else {
+                                            store().commit(name, copy_1);
+                                        }
+                                        recurcive = false;
                                     }
                                     return true;
                                 }
@@ -60,11 +66,16 @@ exports.Stored = function (store, propertyName) {
                 return origin;
             },
             set: function (value) {
-                if (typeof store === 'string') {
-                    this.$store.commit(store + '/' + name, value);
-                    return;
+                if (!recurcive) {
+                    recurcive = true;
+                    if (typeof store === 'string') {
+                        this.$store.commit(store + '/' + name, value);
+                        recurcive = false;
+                        return;
+                    }
+                    store().commit(name, value);
+                    recurcive = false;
                 }
-                store().commit(name, value);
             }
         });
     };
