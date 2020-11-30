@@ -26,6 +26,9 @@ export const Stored = function (store: (() => Store<any>)|string, propertyName: 
 						if (obj instanceof Object) {
 							return new Proxy(obj, {
 								get: (obj: any, prop: any) => {
+									if (obj instanceof Date && typeof obj[prop] === 'function') {
+										return obj[prop].bind(obj);
+									}
 									if (obj[prop] && typeof obj[prop] === 'object') {
 										return createProxy(obj[prop]);
 									}
@@ -55,7 +58,11 @@ export const Stored = function (store: (() => Store<any>)|string, propertyName: 
 						for (let i = 0; i < origin.length; i++) {
 							copy[i] = origin[i];
 						}
-					} else if (typeof origin.clone === 'function') {
+					} 
+                    else if (origin instanceof Date) {
+                      copy = new Date(origin);
+                    }
+                    else if (typeof origin.clone === 'function') {
 						copy = origin.clone();
 					}
 

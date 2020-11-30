@@ -26,6 +26,9 @@ exports.Stored = function (store, propertyName) {
                         if (obj instanceof Object) {
                             return new Proxy(obj, {
                                 get: function (obj, prop) {
+                                    if (obj instanceof Date && typeof obj[prop] === 'function') {
+                                        return obj[prop].bind(obj);
+                                    }
                                     if (obj[prop] && typeof obj[prop] === 'object') {
                                         return createProxy_1(obj[prop]);
                                     }
@@ -55,6 +58,9 @@ exports.Stored = function (store, propertyName) {
                         for (var i = 0; i < origin.length; i++) {
                             copy_1[i] = origin[i];
                         }
+                    }
+                    else if (origin instanceof Date) {
+                        copy_1 = new Date(origin);
                     }
                     else if (typeof origin.clone === 'function') {
                         copy_1 = origin.clone();
