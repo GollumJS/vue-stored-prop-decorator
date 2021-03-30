@@ -10,6 +10,8 @@ exports.Stored = function (store, propertyName) {
         }
         var name = 'set' + propertyName.replace(/\b\w/g, function (l) { return l.toUpperCase(); });
         var recurcive = false;
+        var oldValue;
+        var proxy;
         Object.defineProperty(target, propertyKey, {
             get: function () {
                 var _this = this;
@@ -21,6 +23,9 @@ exports.Stored = function (store, propertyName) {
                     origin = store().state[propertyName];
                 }
                 if (origin instanceof Object) {
+                    if (origin === oldValue && proxy) {
+                        return proxy;
+                    }
                     var copy_1 = null;
                     var createProxy_1 = function (obj) {
                         if (obj instanceof Object) {
@@ -29,7 +34,7 @@ exports.Stored = function (store, propertyName) {
                                     if (obj instanceof Date && typeof obj[prop] === 'function') {
                                         return obj[prop].bind(obj);
                                     }
-                                    if (obj[prop] && typeof obj[prop] === 'object') {
+                                    if ((typeof prop !== 'string' || prop.indexOf('__') !== 0) && obj[prop] && typeof obj[prop] === 'object') {
                                         return createProxy_1(obj[prop]);
                                     }
                                     return obj[prop];
@@ -37,7 +42,7 @@ exports.Stored = function (store, propertyName) {
                                 set: function (obj, prop, value) {
                                     var diff = obj[prop] !== value;
                                     obj[prop] = value;
-                                    if (!recurcive && diff) {
+                                    if (!recurcive && diff && (typeof prop !== 'string' || prop.indexOf('__') !== 0)) {
                                         recurcive = true;
                                         if (typeof store === 'string') {
                                             _this.$store.commit(store + '/' + name, copy_1);
@@ -66,7 +71,9 @@ exports.Stored = function (store, propertyName) {
                         copy_1 = origin.clone();
                     }
                     if (copy_1) {
-                        return createProxy_1(copy_1);
+                        oldValue = origin;
+                        proxy = createProxy_1(copy_1);
+                        return proxy;
                     }
                 }
                 return origin;

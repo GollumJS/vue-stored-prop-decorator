@@ -9,6 +9,10 @@ export const Stored = function (store: (() => Store<any>)|string, propertyName: 
 		const name = 'set' + propertyName.replace(/\b\w/g, l => l.toUpperCase());
 		
 		let recurcive = false;
+		let oldValue: any;
+		let proxy: any;
+			
+			
 		Object.defineProperty(target, propertyKey, {
 			get: function () {
 				let origin: any = null;
@@ -19,6 +23,9 @@ export const Stored = function (store: (() => Store<any>)|string, propertyName: 
 				}
 				
 				if (origin instanceof Object) {
+					if (origin === oldValue && proxy) {
+						return proxy;
+					}
 
 					let copy: any = null;
 
@@ -29,7 +36,7 @@ export const Stored = function (store: (() => Store<any>)|string, propertyName: 
 									if (obj instanceof Date && typeof obj[prop] === 'function') {
 										return obj[prop].bind(obj);
 									}
-									if (obj[prop] && typeof obj[prop] === 'object') {
+									if ((typeof prop !== 'string' || prop.indexOf('__') !== 0) && obj[prop] && typeof obj[prop] === 'object') {
 										return createProxy(obj[prop]);
 									}
 									return obj[prop];
@@ -37,7 +44,7 @@ export const Stored = function (store: (() => Store<any>)|string, propertyName: 
 								set: (obj: any, prop: any, value: any): boolean => {
 									const diff = obj[prop] !== value;
 									obj[prop] = value;
-									if (!recurcive && diff) {
+                                    if (!recurcive && diff && (typeof prop !== 'string' || prop.indexOf('__') !== 0)) {
 										recurcive = true;
 										if (typeof store === 'string') {
 											this.$store.commit((<string>store) + '/' + name, copy);
@@ -59,15 +66,17 @@ export const Stored = function (store: (() => Store<any>)|string, propertyName: 
 							copy[i] = origin[i];
 						}
 					} 
-                    else if (origin instanceof Date) {
-                      copy = new Date(origin);
-                    }
-                    else if (typeof origin.clone === 'function') {
+					else if (origin instanceof Date) {
+						copy = new Date(origin);
+					}
+					else if (typeof origin.clone === 'function') {
 						copy = origin.clone();
 					}
 
 					if (copy) {
-						return createProxy(copy);
+						oldValue = origin;						
+						proxy = createProxy(copy);
+						return proxy;
 					}
 				}
 				return origin;
