@@ -51,8 +51,8 @@ export const Stored = function (
 					state = (<() => Store<any>> store)().state;
 				}
 				
-				return (...args: any[]) => {
-					origin.apply(state, args);
+				return (...args: any[]): any => {
+					return origin.apply(state, args);
 				};
 			}
 			

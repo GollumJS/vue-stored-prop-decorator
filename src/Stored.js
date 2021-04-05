@@ -39,7 +39,7 @@ exports.Stored = function (store, _a) {
                     for (var _i = 0; _i < arguments.length; _i++) {
                         args[_i] = arguments[_i];
                     }
-                    origin.apply(state_1, args);
+                    return origin.apply(state_1, args);
                 };
             }
             if (subProxy && origin instanceof Object) {
