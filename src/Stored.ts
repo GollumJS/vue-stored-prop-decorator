@@ -7,12 +7,14 @@ export const Stored = function (
 		subProxy,
 		readOnly,
 		propName,
-		commitName
+		commitName,
+		isMethod,
 	}: {
 		subProxy?: boolean,
 		readOnly?: boolean,
 		propName?: string,
-		commitName?: string
+		commitName?: string,
+		isMethod?: boolean,
 	} = {}
 ) {
 	return function(target: any, propertyKey: string = null, descriptor: PropertyDescriptor = null) {
@@ -25,6 +27,10 @@ export const Stored = function (
 			commitName = 'set' + propName.replace(/\b\w/g, l => l.toUpperCase());
 		}
 		
+		if (isMethod) {
+			readOnly = true;
+		}
+		
 		let recurcive = false;
 		let oldValue: any;
 		let proxy: any;
@@ -35,6 +41,19 @@ export const Stored = function (
 				origin = this.$store.state[(<string>store)][propName];
 			} else {
 				origin = (<() => Store<any>> store)().state[propName];
+			}
+			
+			if (isMethod) {
+				let state: any = null;
+				if (typeof store === 'string') {
+					state = this.$store.state[(<string>store)];
+				} else {
+					state = (<() => Store<any>> store)().state;
+				}
+				
+				return (...args: any[]) => {
+					origin.apply(state, args);
+				};
 			}
 			
 			if (subProxy && origin instanceof Object) {

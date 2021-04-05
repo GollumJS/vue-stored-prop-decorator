@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Stored = function (store, _a) {
-    var _b = _a === void 0 ? {} : _a, subProxy = _b.subProxy, readOnly = _b.readOnly, propName = _b.propName, commitName = _b.commitName;
+    var _b = _a === void 0 ? {} : _a, subProxy = _b.subProxy, readOnly = _b.readOnly, propName = _b.propName, commitName = _b.commitName, isMethod = _b.isMethod;
     return function (target, propertyKey, descriptor) {
         if (propertyKey === void 0) { propertyKey = null; }
         if (descriptor === void 0) { descriptor = null; }
@@ -10,6 +10,9 @@ exports.Stored = function (store, _a) {
         }
         if (!commitName) {
             commitName = 'set' + propName.replace(/\b\w/g, function (l) { return l.toUpperCase(); });
+        }
+        if (isMethod) {
+            readOnly = true;
         }
         var recurcive = false;
         var oldValue;
@@ -22,6 +25,22 @@ exports.Stored = function (store, _a) {
             }
             else {
                 origin = store().state[propName];
+            }
+            if (isMethod) {
+                var state_1 = null;
+                if (typeof store === 'string') {
+                    state_1 = this.$store.state[store];
+                }
+                else {
+                    state_1 = store().state;
+                }
+                return function () {
+                    var args = [];
+                    for (var _i = 0; _i < arguments.length; _i++) {
+                        args[_i] = arguments[_i];
+                    }
+                    origin.apply(state_1, args);
+                };
             }
             if (subProxy && origin instanceof Object) {
                 if (origin === oldValue && proxy) {
