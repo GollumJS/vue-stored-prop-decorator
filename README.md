@@ -13,7 +13,7 @@ Replace property by setter and getter on store.
 npm install --save vue-stored-prop-decorator
 ```
 
-## Exemple:
+## Stored Example:
 
 ```typescript
 	import {Component, Vue} from 'vue-property-decorator';
@@ -36,7 +36,7 @@ npm install --save vue-stored-prop-decorator
 		// 	userStore.commit('setMe', value);	
 		// }
 		
-		@Stored(() => userStore, 'me')
+		@Stored(() => userStore, { propName: 'me' })
 		customPropName: User;
 		
 		// Property `customPropName` become after decoration : 
@@ -47,7 +47,21 @@ npm install --save vue-stored-prop-decorator
 		// 	userStore.commit('setMe', value);	
 		// }
 		
-		@Stored('user', 'me')
+		@Stored(() => userStore, {
+			propName: 'me',
+			commitName: 'setMyMe',
+		})
+		customPropName2: User;
+		
+		// Property `customPropName` become after decoration : 
+		// get customPropName(): User {
+		// 	return userStore.state.me;	
+		// }
+		// set customPropName(value: User) {
+		// 	userStore.commit('setMyMe', value);	
+		// }
+		
+		@Stored('user', { propName: 'me' })
 		meString: User;
 		
 		// Property `meString` become after decoration : 
@@ -57,13 +71,20 @@ npm install --save vue-stored-prop-decorator
 		// set me(value: User) {
 		// 	userStore.commit('user/setMe', value);	
 		// }
+
+		@Stored('user', {
+			propName: 'me',
+			proxy: true
+		})
+		meProxy: User;
+
 		
 		public editUser() {
 			
 			// If User object has clone method 
 			// and if you edit property of user
 			 
-			this.meString.firstname = 'ChangeValue';
+			this.meString = new User();
 			
 			// So real execute is:
 			// copy.firstname = 'ChangeValue';
@@ -71,4 +92,51 @@ npm install --save vue-stored-prop-decorator
 		}
 	}
 
+```
+
+## Commit and Dispatch Example:
+
+```typescript
+	import {Component, Vue} from 'vue-property-decorator';
+	import {Commit, Dispatch} from 'vue-stored-prop-decorator';
+	import {User} from './models/user';
+	import userStore from './stores/user';
+	
+	@Component
+	export default class MyComponent extends Vue {
+		
+		@Commit(() => userStore)
+		setUser: (user: User) => void;
+		
+		// Property `setUser` become after decoration :
+		// setUser(user: User): void {
+		//	 return userStore.commit('setUser', user);
+		// }
+
+
+		@Commit('user', 'setUser')
+		setUserString: (user: User) => void;
+		
+		// Property `setUserString` become after decoration :
+		// setUser(user: User): void {
+		//	 return this.$store.commit('user/setUser', user);
+		// }
+		
+		@Dispatch(() => userStore)
+		findById: (id: number) => Promise<User>;
+		
+		// Property `findById` become after decoration :
+		// findById(id: number): void {
+		//	 return userStore.dispatch('findById', user);
+		// }
+
+		@Dispatch('user', 'findById')
+		findByIdString: (id: number) => Promise<User>;
+		
+		// Property `findByIdString` become after decoration :
+		// findByIdString(id: number): void {
+		//	 return this.$store.dispatch('user/findByIdString', id);
+		// }
+		
+	}
 ```
