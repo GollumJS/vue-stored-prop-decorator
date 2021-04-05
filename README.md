@@ -81,13 +81,20 @@ npm install --save vue-stored-prop-decorator
 		
 		public editUser() {
 			
-			// If User object has clone method 
-			// and if you edit property of user
-			 
 			this.meString = new User();
 			
 			// So real execute is:
-			// copy.firstname = 'ChangeValue';
+			// this.$store.commit('user/setMe', new User());
+
+			 
+			this.meProxy.firstName = 'Bender';
+			
+			// So real execute is:
+			// If User object has clone method 
+			// and if you edit property of user
+			//
+			// const copy = user.clone()
+			// copy.firstName = 'Bender';
 			// this.$store.commit('user/setMe', copy);
 		}
 	}
