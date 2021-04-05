@@ -1,6 +1,6 @@
 {
   "name": "vue-stored-prop-decorator",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Add @Stored property annotation for vuex in Typscript mode. Replace property by setter and getter on store.",
   "main": "index.js",
   "scripts": {
@@ -34,6 +34,9 @@
     "typescript": "^2.8.3"
   },
   "files": [
+    "index.ts",
+    "index.js",
+    "index.js.map",
     "*/**.ts",
     "*/**.js",
     "*/**.js.map",
