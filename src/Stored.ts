@@ -17,10 +17,10 @@ export const Stored = function (
 		isMethod?: boolean,
 	} = {}
 ) {
-	return function(target: any, propertyKey: string = null, descriptor: PropertyDescriptor = null) {
+	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 		
 		if (!propName) {
-			propName = propertyKey;
+			propName = propertyKey as string;
 		}
 		
 		if (!commitName) {
@@ -38,9 +38,9 @@ export const Stored = function (
 		const get = function(this: Vue) {
 			let origin: any = null;
 			if (typeof store === 'string') {
-				origin = this.$store.state[(<string>store)][propName];
+				origin = this.$store.state[(<string>store)][propName as any];
 			} else {
-				origin = (<() => Store<any>> store)().state[propName];
+				origin = (<() => Store<any>> store)().state[propName as any];
 			}
 			
 			if (isMethod) {
@@ -62,7 +62,7 @@ export const Stored = function (
 				}
 
 				let copy: any = null;
-				const createProxy = (obj) => {
+				const createProxy: any = (obj: any): any => {
 					
 					const final = typeof store === 'string' ? store : store();
 					const originObject = obj['__stored_original__'] ? obj['__stored_original__'] : obj;
@@ -86,8 +86,8 @@ export const Stored = function (
 									return obj;
 								}
 								
-								if (obj instanceof Date && typeof obj[prop] === 'function') {
-									return obj[prop].bind(obj);
+								if (obj instanceof Date && typeof (obj as any)[prop] === 'function') {
+									return (obj as any)[prop].bind(obj);
 								}
 								if ((typeof prop !== 'string' || prop.indexOf('__') !== 0) && obj[prop] && typeof obj[prop] === 'object') {
 									return createProxy(obj[prop]);
@@ -102,7 +102,7 @@ export const Stored = function (
 									if (typeof store === 'string') {
 										this.$store.commit((<string>store) + '/' + commitName, copy);
 									} else {
-										(<() => Store<any>> store)().commit(commitName, copy);	
+										(<() => Store<any>> store)().commit(commitName as any, copy);	
 									}
 									recurcive = false;
 								}
@@ -151,13 +151,13 @@ export const Stored = function (
 					recurcive = false;
 					return;
 				}
-				(<() => Store<any>> store)().commit(commitName, value);
+				(<() => Store<any>> store)().commit(commitName as any, value);
 				recurcive = false;
 			}
 		}
 		
 			
-		Object.defineProperty(target, propertyKey, readOnly ? {
+		Object.defineProperty(target, propertyKey as string, readOnly ? {
 			get: get,
 			configurable: true
 		} : {

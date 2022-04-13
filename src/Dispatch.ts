@@ -1,6 +1,6 @@
 import { Store } from 'vuex';
 
-export const Dispatch = (store: (() => Store<any>)|string, dispatchName: string = null): any => {
+export const Dispatch = (store: (() => Store<any>)|string, dispatchName: string|null = null): any => {
 	return (target: any, propertyKey: string) => {
 		
 		if (!dispatchName) {
@@ -12,7 +12,7 @@ export const Dispatch = (store: (() => Store<any>)|string, dispatchName: string 
 				if (typeof store === 'string') {
 					return this.$store.dispatch((<string>store) + '/' + dispatchName, value);
 				}
-				return (<() => Store<any>> store)().dispatch(dispatchName, value);
+				return (<() => Store<any>> store)().dispatch(dispatchName as string, value);
 			},
 			configurable: true
 		});

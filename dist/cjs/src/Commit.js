@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Commit = function (store, commitName) {
+exports.Commit = void 0;
+var Commit = function (store, commitName) {
     if (commitName === void 0) { commitName = null; }
     return function (target, propertyKey) {
         if (!commitName) {
@@ -17,4 +18,5 @@ exports.Commit = function (store, commitName) {
         });
     };
 };
+exports.Commit = Commit;
 //# sourceMappingURL=Commit.js.map

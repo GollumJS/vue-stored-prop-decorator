@@ -1,6 +1,6 @@
 import { Store } from 'vuex';
 
-export const Commit = (store: (() => Store<any>)|string, commitName: string = null): any => {
+export const Commit = (store: (() => Store<any>)|string, commitName: string|null = null): any => {
 	return (target: any, propertyKey: string) => {
 
 		if (!commitName) {
@@ -12,7 +12,7 @@ export const Commit = (store: (() => Store<any>)|string, commitName: string = nu
 				if (typeof store === 'string') {
 					return this.$store.dispatch((<string>store) + '/' + commitName, value);
 				}
-				return (<() => Store<any>> store)().commit(commitName, value);
+				return (<() => Store<any>> store)().commit(commitName as string, value);
 			},
 			configurable: true
 		});

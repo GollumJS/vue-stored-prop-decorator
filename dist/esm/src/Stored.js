@@ -1,25 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Stored = function (store, _a) {
-    var _b = _a === void 0 ? {} : _a, subProxy = _b.subProxy, readOnly = _b.readOnly, propName = _b.propName, commitName = _b.commitName, isMethod = _b.isMethod;
+exports.Stored = void 0;
+const Stored = function (store, { subProxy, readOnly, propName, commitName, isMethod, } = {}) {
     return function (target, propertyKey, descriptor) {
-        if (propertyKey === void 0) { propertyKey = null; }
-        if (descriptor === void 0) { descriptor = null; }
         if (!propName) {
             propName = propertyKey;
         }
         if (!commitName) {
-            commitName = 'set' + propName.replace(/\b\w/g, function (l) { return l.toUpperCase(); });
+            commitName = 'set' + propName.replace(/\b\w/g, l => l.toUpperCase());
         }
         if (isMethod) {
             readOnly = true;
         }
-        var recurcive = false;
-        var oldValue;
-        var proxy;
-        var get = function () {
-            var _this = this;
-            var origin = null;
+        let recurcive = false;
+        let oldValue;
+        let proxy;
+        const get = function () {
+            let origin = null;
             if (typeof store === 'string') {
                 origin = this.$store.state[store][propName];
             }
@@ -27,42 +24,37 @@ exports.Stored = function (store, _a) {
                 origin = store().state[propName];
             }
             if (isMethod) {
-                var state_1 = null;
+                let state = null;
                 if (typeof store === 'string') {
-                    state_1 = this.$store.state[store];
+                    state = this.$store.state[store];
                 }
                 else {
-                    state_1 = store().state;
+                    state = store().state;
                 }
-                return function () {
-                    var args = [];
-                    for (var _i = 0; _i < arguments.length; _i++) {
-                        args[_i] = arguments[_i];
-                    }
-                    return origin.apply(state_1, args);
+                return (...args) => {
+                    return origin.apply(state, args);
                 };
             }
             if (subProxy && origin instanceof Object) {
                 if (origin === oldValue && proxy) {
                     return proxy;
                 }
-                var copy_1 = null;
-                var createProxy_1 = function (obj) {
-                    var final = typeof store === 'string' ? store : store();
-                    var originObject = obj['__stored_original__'] ? obj['__stored_original__'] : obj;
+                let copy = null;
+                const createProxy = (obj) => {
+                    const final = typeof store === 'string' ? store : store();
+                    const originObject = obj['__stored_original__'] ? obj['__stored_original__'] : obj;
                     if (!obj['__stored_proxy__']) {
                         obj['__stored_proxy__'] = [];
                     }
-                    for (var _i = 0, _a = obj['__stored_proxy__']; _i < _a.length; _i++) {
-                        var infos = _a[_i];
+                    for (const infos of obj['__stored_proxy__']) {
                         if (infos.store === final &&
                             infos.commitName === commitName) {
                             return infos.proxy;
                         }
                     }
                     if (obj instanceof Object) {
-                        var proxy_1 = new Proxy(obj, {
-                            get: function (obj, prop) {
+                        const proxy = new Proxy(obj, {
+                            get: (obj, prop) => {
                                 if (prop === '__stored_original__') {
                                     return obj;
                                 }
@@ -70,20 +62,20 @@ exports.Stored = function (store, _a) {
                                     return obj[prop].bind(obj);
                                 }
                                 if ((typeof prop !== 'string' || prop.indexOf('__') !== 0) && obj[prop] && typeof obj[prop] === 'object') {
-                                    return createProxy_1(obj[prop]);
+                                    return createProxy(obj[prop]);
                                 }
                                 return obj[prop];
                             },
-                            set: function (obj, prop, value) {
-                                var diff = obj[prop] !== value;
+                            set: (obj, prop, value) => {
+                                const diff = obj[prop] !== value;
                                 obj[prop] = value;
                                 if (!recurcive && diff && (typeof prop !== 'string' || prop.indexOf('__') !== 0)) {
                                     recurcive = true;
                                     if (typeof store === 'string') {
-                                        _this.$store.commit(store + '/' + commitName, copy_1);
+                                        this.$store.commit(store + '/' + commitName, copy);
                                     }
                                     else {
-                                        store().commit(commitName, copy_1);
+                                        store().commit(commitName, copy);
                                     }
                                     recurcive = false;
                                 }
@@ -93,33 +85,33 @@ exports.Stored = function (store, _a) {
                         obj['__stored_proxy__'].push({
                             store: final,
                             commitName: commitName,
-                            proxy: proxy_1
+                            proxy: proxy
                         });
-                        return proxy_1;
+                        return proxy;
                     }
                     return obj;
                 };
                 if (Array.isArray(origin)) {
-                    copy_1 = [];
-                    for (var i = 0; i < origin.length; i++) {
-                        copy_1[i] = origin[i];
+                    copy = [];
+                    for (let i = 0; i < origin.length; i++) {
+                        copy[i] = origin[i];
                     }
                 }
                 else if (origin instanceof Date) {
-                    copy_1 = new Date(origin);
+                    copy = new Date(origin);
                 }
                 else if (typeof origin.clone === 'function') {
-                    copy_1 = origin.clone();
+                    copy = origin.clone();
                 }
-                if (copy_1) {
+                if (copy) {
                     oldValue = origin;
-                    proxy = createProxy_1(copy_1);
+                    proxy = createProxy(copy);
                     return proxy;
                 }
             }
             return origin;
         };
-        var set = function (value) {
+        const set = function (value) {
             if (!recurcive) {
                 recurcive = true;
                 if (typeof store === 'string') {
@@ -141,4 +133,5 @@ exports.Stored = function (store, _a) {
         });
     };
 };
+exports.Stored = Stored;
 //# sourceMappingURL=Stored.js.map

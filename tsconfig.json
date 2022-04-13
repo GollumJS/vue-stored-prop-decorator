@@ -6,6 +6,11 @@
 		"preserveConstEnums": true,
 		"sourceMap": true,
 		"experimentalDecorators": true,
+		"strictNullChecks": true,
+		"noImplicitAny": true,
+		"declaration": true,
+		"declarationDir": "dist/typings",
+		"outDir": "dist/cjs",
 		"lib": [
 			"es6",
 			"scripthost",
