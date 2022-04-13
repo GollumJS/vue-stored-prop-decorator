@@ -17,7 +17,7 @@ export const Stored = function (
 		isMethod?: boolean,
 	} = {}
 ) {
-	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+	return function(target: any, propertyKey: string|null = null, descriptor: PropertyDescriptor|null = null) {
 		
 		if (!propName) {
 			propName = propertyKey as string;

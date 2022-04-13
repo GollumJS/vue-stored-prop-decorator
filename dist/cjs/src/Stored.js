@@ -4,6 +4,8 @@ exports.Stored = void 0;
 var Stored = function (store, _a) {
     var _b = _a === void 0 ? {} : _a, subProxy = _b.subProxy, readOnly = _b.readOnly, propName = _b.propName, commitName = _b.commitName, isMethod = _b.isMethod;
     return function (target, propertyKey, descriptor) {
+        if (propertyKey === void 0) { propertyKey = null; }
+        if (descriptor === void 0) { descriptor = null; }
         if (!propName) {
             propName = propertyKey;
         }

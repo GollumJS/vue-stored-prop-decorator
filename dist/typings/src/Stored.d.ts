@@ -5,4 +5,4 @@ export declare const Stored: (store: (() => Store<any>) | string, { subProxy, re
     propName?: string | undefined;
     commitName?: string | undefined;
     isMethod?: boolean | undefined;
-}) => (target: any, propertyKey: string, descriptor: PropertyDescriptor) => void;
+}) => (target: any, propertyKey?: string | null, descriptor?: PropertyDescriptor | null) => void;

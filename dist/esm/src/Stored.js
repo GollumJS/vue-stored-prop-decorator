@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Stored = void 0;
 const Stored = function (store, { subProxy, readOnly, propName, commitName, isMethod, } = {}) {
-    return function (target, propertyKey, descriptor) {
+    return function (target, propertyKey = null, descriptor = null) {
         if (!propName) {
             propName = propertyKey;
         }
