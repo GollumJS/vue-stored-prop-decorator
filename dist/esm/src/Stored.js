@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Stored = void 0;
-const Stored = function (store, { subProxy, readOnly, propName, commitName, isMethod, } = {}) {
+export const Stored = function (store, { subProxy, readOnly, propName, commitName, isMethod, } = {}) {
     return function (target, propertyKey = null, descriptor = null) {
         if (!propName) {
             propName = propertyKey;
@@ -133,5 +130,4 @@ const Stored = function (store, { subProxy, readOnly, propName, commitName, isMe
         });
     };
 };
-exports.Stored = Stored;
 //# sourceMappingURL=Stored.js.map

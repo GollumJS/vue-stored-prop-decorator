@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Dispatch = void 0;
-const Dispatch = (store, dispatchName = null) => {
+export const Dispatch = (store, dispatchName = null) => {
     return (target, propertyKey) => {
         if (!dispatchName) {
             dispatchName = propertyKey;
@@ -17,5 +14,4 @@ const Dispatch = (store, dispatchName = null) => {
         });
     };
 };
-exports.Dispatch = Dispatch;
 //# sourceMappingURL=Dispatch.js.map
